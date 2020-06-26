@@ -1,0 +1,28 @@
+{
+  "name": "jsx-pistols",
+  "description": "TypeScript and JSX as web templates",
+  "version": "0.0.1-dev",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsc --build tsconfig.json",
+    "test": "ts-node ./test/index.ts"
+  },
+  "dependencies": {
+    "fs-extra": "^9.0.1",
+    "preact-render-to-string": "^5.1.9",
+    "require-from-string": "^2.0.2",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/fs-extra": "^9.0.1",
+    "@types/node": "^14.0.14",
+    "@types/require-from-string": "^1.2.0",
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "preact": "^10.4.4",
+    "ts-node": "^8.10.2"
+  }
+}
