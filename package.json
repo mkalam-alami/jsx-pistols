@@ -1,7 +1,7 @@
 {
   "name": "jsx-pistols",
   "description": "TypeScript and JSX as web templates",
-  "version": "0.0.2",
+  "version": "0.0.3-dev",
   "license": "MIT",
   "homepage": "https://github.com/mkalam-alami/jsx-pistols#readme",
   "main": "dist/index.js",
