@@ -4,12 +4,13 @@ import * as fs from 'fs-extra';
 import requireFromString from 'require-from-string';
 import render from 'preact-render-to-string';
 
-export async function renderTSX(absolutePath: string, context: object & any): Promise<string> {
+export async function renderTSX(absolutePath: string, context: object & any, compilerOptions: ts.CompilerOptions = {}): Promise<string> {
   const sources = (await fs.readFile(absolutePath)).toString();
   const transpiledSources = ts.transpileModule(sources, {
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
-      jsx: ts.JsxEmit.React
+      jsx: ts.JsxEmit.React,
+      ...compilerOptions
     }
   });
   const module = requireFromString(transpiledSources.outputText);

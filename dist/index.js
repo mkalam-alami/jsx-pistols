@@ -54,15 +54,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
-var path = __importStar(require("path"));
-var renderer_1 = require("./renderer");
 var fs = __importStar(require("fs-extra"));
+var path = __importStar(require("path"));
+var cache_1 = __importDefault(require("./cache"));
+var renderer_1 = require("./renderer");
 var JsxPistols = /** @class */ (function () {
-    function JsxPistols(rootPath) {
-        if (rootPath === void 0) { rootPath = process.cwd(); }
-        this.rootPath = path.isAbsolute(rootPath) ? rootPath : path.resolve(process.cwd(), rootPath);
+    function JsxPistols(options) {
+        if (options === void 0) { options = {}; }
+        this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
+        this.tsCompilerOptions = options.tsCompilerOptions;
+        this.cache = new cache_1["default"]({
+            disableCache: options.disableCache,
+            maxCacheSize: options.maxCacheSize
+        });
     }
+    JsxPistols.prototype.toAbsolutePath = function (value, fromRoot) {
+        return path.isAbsolute(value) ? value : path.resolve(fromRoot || this.rootPath, value);
+    };
     JsxPistols.prototype.registerEngine = function (app) {
         app.engine('jsx', this.engine.bind(this));
         app.engine('tsx', this.engine.bind(this));
@@ -92,16 +104,19 @@ var JsxPistols = /** @class */ (function () {
     JsxPistols.prototype.render = function (templatePath, context) {
         if (context === void 0) { context = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var absolutePath, validPath;
+            var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        absolutePath = path.resolve(this.rootPath, templatePath);
-                        return [4 /*yield*/, this.validatePath(templatePath)];
-                    case 1:
-                        validPath = _a.sent();
-                        return [2 /*return*/, renderer_1.renderTSX(validPath, context)];
-                }
+                return [2 /*return*/, this.cache.wrap(templatePath, function () { return __awaiter(_this, void 0, void 0, function () {
+                        var validPath;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.validatePath(this.toAbsolutePath(templatePath))];
+                                case 1:
+                                    validPath = _a.sent();
+                                    return [2 /*return*/, renderer_1.renderTSX(validPath, context, this.tsCompilerOptions)];
+                            }
+                        });
+                    }); })];
             });
         });
     };
