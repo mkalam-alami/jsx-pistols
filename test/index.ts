@@ -18,7 +18,7 @@ test("[ JSX Pistols ]", async () => {
   });
 
   await test("Explicit templates root", async () => {
-    const jsxPistols = new JsxPistols(__dirname);
+    const jsxPistols = new JsxPistols({ rootPath: __dirname });
 
     const context: TestContext = { name: 'world' };
     const result = await jsxPistols.render('template.tsx', context);

@@ -60,21 +60,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var fs = __importStar(require("fs-extra"));
 var path = __importStar(require("path"));
+var preact_render_to_string_1 = __importDefault(require("preact-render-to-string"));
 var cache_1 = __importDefault(require("./cache"));
-var renderer_1 = require("./renderer");
+var transpiler_1 = require("./transpiler");
 var JsxPistols = /** @class */ (function () {
     function JsxPistols(options) {
         if (options === void 0) { options = {}; }
         this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
-        this.tsCompilerOptions = options.tsCompilerOptions;
         this.cache = new cache_1["default"]({
             disableCache: options.disableCache,
             maxCacheSize: options.maxCacheSize
         });
     }
-    JsxPistols.prototype.toAbsolutePath = function (value, fromRoot) {
-        return path.isAbsolute(value) ? value : path.resolve(fromRoot || this.rootPath, value);
-    };
     JsxPistols.prototype.registerEngine = function (app) {
         app.engine('jsx', this.engine.bind(this));
         app.engine('tsx', this.engine.bind(this));
@@ -104,21 +101,30 @@ var JsxPistols = /** @class */ (function () {
     JsxPistols.prototype.render = function (templatePath, context) {
         if (context === void 0) { context = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var jsxTemplate;
             var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.cache.wrap(templatePath, function () { return __awaiter(_this, void 0, void 0, function () {
-                        var validPath;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, this.validatePath(this.toAbsolutePath(templatePath))];
-                                case 1:
-                                    validPath = _a.sent();
-                                    return [2 /*return*/, renderer_1.renderTSX(validPath, context, this.tsCompilerOptions)];
-                            }
-                        });
-                    }); })];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.cache.wrap(templatePath, function () { return __awaiter(_this, void 0, void 0, function () {
+                            var validPath;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.validatePath(this.toAbsolutePath(templatePath))];
+                                    case 1:
+                                        validPath = _a.sent();
+                                        return [2 /*return*/, transpiler_1.transpileTsx(validPath)];
+                                }
+                            });
+                        }); })];
+                    case 1:
+                        jsxTemplate = _a.sent();
+                        return [2 /*return*/, preact_render_to_string_1["default"](jsxTemplate(context))];
+                }
             });
         });
+    };
+    JsxPistols.prototype.toAbsolutePath = function (value, fromRoot) {
+        return path.isAbsolute(value) ? value : path.resolve(fromRoot || this.rootPath, value);
     };
     JsxPistols.prototype.validatePath = function (templatePath) {
         return __awaiter(this, void 0, void 0, function () {

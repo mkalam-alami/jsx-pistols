@@ -3,7 +3,7 @@
     "module": "commonjs",
     "jsx": "preserve",
     "outDir": "./dist",
-    "strict": true,
+    "strict": false,
     "types": [ "node" ],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

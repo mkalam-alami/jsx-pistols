@@ -1,13 +1,12 @@
 import { Application } from 'express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import ts from 'typescript';
+import render from 'preact-render-to-string';
 import Cache from './cache';
-import { renderTSX } from './renderer';
+import { transpileTsx } from './transpiler';
 
 export interface JsxPistolsOptions {
   rootPath: string;
-  tsCompilerOptions?: ts.CompilerOptions;
   maxCacheSize?: number;
   disableCache?: boolean;
 }
@@ -15,20 +14,14 @@ export interface JsxPistolsOptions {
 export default class JsxPistols {
 
   private rootPath: string;
-  private tsCompilerOptions?: ts.CompilerOptions;
   private cache: Cache;
 
   constructor(options: Partial<JsxPistolsOptions> = {}) {
     this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
-    this.tsCompilerOptions = options.tsCompilerOptions;
     this.cache = new Cache({
       disableCache: options.disableCache,
       maxCacheSize: options.maxCacheSize
     });
-  }
-
-  private toAbsolutePath(value: string, fromRoot?: string) {
-    return path.isAbsolute(value) ? value : path.resolve(fromRoot || this.rootPath, value);
   }
 
   public registerEngine(app: Application) {
@@ -46,11 +39,16 @@ export default class JsxPistols {
     }
   }
 
-  public async render(templatePath: string, context: object & any = {}): Promise<string> {
-    return this.cache.wrap(templatePath, async () => {
+  public async render(templatePath: string, context: Object = {}): Promise<string> {
+    const jsxTemplate = await this.cache.wrap(templatePath, async () => {
       const validPath = await this.validatePath(this.toAbsolutePath(templatePath));
-      return renderTSX(validPath, context, this.tsCompilerOptions);
+      return transpileTsx(validPath);
     });
+    return render(jsxTemplate(context));
+  }
+
+  private toAbsolutePath(value: string, fromRoot?: string) {
+    return path.isAbsolute(value) ? value : path.resolve(fromRoot || this.rootPath, value);
   }
 
   private async validatePath(templatePath: string): Promise<string> {

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -69,31 +58,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.renderTSX = void 0;
-var ts = __importStar(require("typescript"));
+exports.transpileTsx = void 0;
+var babel = __importStar(require("@babel/core"));
 var fs = __importStar(require("fs-extra"));
 var require_from_string_1 = __importDefault(require("require-from-string"));
-var preact_render_to_string_1 = __importDefault(require("preact-render-to-string"));
-function renderTSX(absolutePath, context, compilerOptions) {
-    if (compilerOptions === void 0) { compilerOptions = {}; }
+function transpileTsx(absolutePath) {
     return __awaiter(this, void 0, void 0, function () {
-        var sources, transpiledSources, module, jsxOutput;
+        var tsxSources, transformResult, module;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fs.readFile(absolutePath)];
                 case 1:
-                    sources = (_a.sent()).toString();
-                    transpiledSources = ts.transpileModule(sources, {
-                        compilerOptions: __assign({ module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.React }, compilerOptions)
-                    });
-                    module = require_from_string_1["default"](transpiledSources.outputText);
+                    tsxSources = (_a.sent()).toString();
+                    return [4 /*yield*/, babel.transformAsync(tsxSources, tsxToJsOptions())];
+                case 2:
+                    transformResult = _a.sent();
+                    module = require_from_string_1["default"](transformResult.code);
                     if (typeof module["default"] !== 'function') {
                         throw new Error("Module's default export is missing or not a function: " + absolutePath);
                     }
-                    jsxOutput = module["default"](context);
-                    return [2 /*return*/, preact_render_to_string_1["default"](jsxOutput)];
+                    return [2 /*return*/, module["default"]];
             }
         });
     });
 }
-exports.renderTSX = renderTSX;
+exports.transpileTsx = transpileTsx;
+function tsxToJsOptions() {
+    return {
+        filename: "file.ts",
+        presets: [[
+                "@babel/preset-typescript",
+                {
+                    allExtensions: true,
+                    isTSX: true
+                }
+            ]],
+        plugins: [
+            "@babel/plugin-transform-modules-commonjs",
+            "@babel/plugin-transform-react-jsx"
+        ]
+    };
+}

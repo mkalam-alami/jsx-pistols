@@ -2,7 +2,7 @@
 
 TypeScript and JSX as web templates
 
-## Installing
+## Installation
 
 ```
 npm install jsx-pistols
@@ -10,16 +10,29 @@ npm install jsx-pistols
 
 ## Usage
 
-### Manual
+### Template creation
+
+```jsx
+// mytemplate.tsx
+export default function render(context: { name: string }) {
+  return <div>Hello {name}!</div>
+}
+```
+
+### Template rendering
+
+**Manual**
 
 ```typescript
 import JsxPistols from 'jsx-pistols';
 
-const jsxPistols = new JsxPistols('path/to/templates');
+const jsxPistols = new JsxPistols({ rootPath: 'path/to/templates' });
 const result = await jsxPistols.render('mytemplate', { name: 'John' });
+
+console.log(result); // <div>Hello John!</div>
 ```
 
-### Express integration
+**Express integration**
 
 ```typescript
 import JsxPistols from 'jsx-pistols';
@@ -28,4 +41,8 @@ const app = express();
 
 const jsxPistols = new JsxPistols('path/to/templates');
 jsxPistols.registerEngine(app);
+
+app.get('/', (req, res) => {
+  res.render('mytemplate', { name: 'world' })
+})
 ```
