@@ -2,6 +2,9 @@ import * as babel from "@babel/core";
 import * as fs from 'fs-extra';
 import { JSX } from "preact";
 import requireFromString from 'require-from-string';
+import * as babelPresetTypescript from "@babel/preset-typescript";
+import * as babelPluginTransformModulesCommonJs from "@babel/plugin-transform-modules-commonjs";
+import * as babelPluginTransformReactJsx from "@babel/plugin-transform-react-jsx";
 
 export type JSXTemplate = (context: Object) => JSX.Element;
 
@@ -19,15 +22,15 @@ function tsxToJsOptions() {
   return {
     filename: "file.ts",
     presets: [[
-      "@babel/preset-typescript",
+      babelPresetTypescript,
       {
         allExtensions: true,
         isTSX: true
       }
     ]],
     plugins: [
-      "@babel/plugin-transform-modules-commonjs",
-      "@babel/plugin-transform-react-jsx"
+      babelPluginTransformModulesCommonJs,
+      babelPluginTransformReactJsx
     ]
   };
 }

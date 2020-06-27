@@ -62,6 +62,9 @@ exports.transpileTsx = void 0;
 var babel = __importStar(require("@babel/core"));
 var fs = __importStar(require("fs-extra"));
 var require_from_string_1 = __importDefault(require("require-from-string"));
+var babelPresetTypescript = __importStar(require("@babel/preset-typescript"));
+var babelPluginTransformModulesCommonJs = __importStar(require("@babel/plugin-transform-modules-commonjs"));
+var babelPluginTransformReactJsx = __importStar(require("@babel/plugin-transform-react-jsx"));
 function transpileTsx(absolutePath) {
     return __awaiter(this, void 0, void 0, function () {
         var tsxSources, transformResult, module;
@@ -87,15 +90,15 @@ function tsxToJsOptions() {
     return {
         filename: "file.ts",
         presets: [[
-                "@babel/preset-typescript",
+                babelPresetTypescript,
                 {
                     allExtensions: true,
                     isTSX: true
                 }
             ]],
         plugins: [
-            "@babel/plugin-transform-modules-commonjs",
-            "@babel/plugin-transform-react-jsx"
+            babelPluginTransformModulesCommonJs,
+            babelPluginTransformReactJsx
         ]
     };
 }
