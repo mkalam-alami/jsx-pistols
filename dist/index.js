@@ -58,27 +58,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
+exports.defaultBabelOptions = void 0;
 var fs = __importStar(require("fs-extra"));
 var path = __importStar(require("path"));
 var preact_render_to_string_1 = __importDefault(require("preact-render-to-string"));
 var cache_1 = __importDefault(require("./cache"));
 var transpiler_1 = require("./transpiler");
+exports.defaultBabelOptions = transpiler_1.defaultBabelOptions;
 var JsxPistols = /** @class */ (function () {
     function JsxPistols(options) {
         if (options === void 0) { options = {}; }
         this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
+        this.babelOptions = options.babelOptions;
         this.cache = new cache_1["default"]({
             disableCache: options.disableCache,
             maxCacheSize: options.maxCacheSize
         });
+        if (options.expressApp) {
+            this.registerToExpressApp(options.expressApp, options.rootPath);
+        }
     }
-    JsxPistols.prototype.registerEngine = function (app) {
-        app.engine('jsx', this.engine.bind(this));
-        app.engine('tsx', this.engine.bind(this));
-        app.set('view engine', 'tsx');
-    };
-    JsxPistols.prototype.engine = function (filePath, options, callback) {
-        return __awaiter(this, void 0, void 0, function () {
+    JsxPistols.prototype.registerToExpressApp = function (app, viewsPath) {
+        var _this = this;
+        var expressEngine = function (filePath, options, callback) { return __awaiter(_this, void 0, void 0, function () {
             var output, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -96,7 +98,13 @@ var JsxPistols = /** @class */ (function () {
                     case 3: return [2 /*return*/];
                 }
             });
-        });
+        }); };
+        app.engine('jsx', expressEngine.bind(this));
+        app.engine('tsx', expressEngine.bind(this));
+        app.set('view engine', 'tsx');
+        if (viewsPath) {
+            app.set('views', this.toAbsolutePath(viewsPath));
+        }
     };
     JsxPistols.prototype.render = function (templatePath, context) {
         if (context === void 0) { context = {}; }
@@ -106,13 +114,13 @@ var JsxPistols = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.cache.wrap(templatePath, function () { return __awaiter(_this, void 0, void 0, function () {
-                            var validPath;
+                            var existingPath;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.validatePath(this.toAbsolutePath(templatePath))];
+                                    case 0: return [4 /*yield*/, this.searchExistingPath(this.toAbsolutePath(templatePath))];
                                     case 1:
-                                        validPath = _a.sent();
-                                        return [2 /*return*/, transpiler_1.transpileTsx(validPath)];
+                                        existingPath = _a.sent();
+                                        return [2 /*return*/, transpiler_1.transpileTsx(existingPath, this.babelOptions)];
                                 }
                             });
                         }); })];
@@ -126,7 +134,7 @@ var JsxPistols = /** @class */ (function () {
     JsxPistols.prototype.toAbsolutePath = function (value, fromRoot) {
         return path.isAbsolute(value) ? value : path.resolve(fromRoot || this.rootPath, value);
     };
-    JsxPistols.prototype.validatePath = function (templatePath) {
+    JsxPistols.prototype.searchExistingPath = function (templatePath) {
         return __awaiter(this, void 0, void 0, function () {
             var absolutePath, extname, candidatePathJsx, candidatePathTsx;
             return __generator(this, function (_a) {
@@ -155,7 +163,7 @@ var JsxPistols = /** @class */ (function () {
                             return [2 /*return*/, candidatePathTsx];
                         }
                         _a.label = 5;
-                    case 5: throw new Error("Template doesn't exist (from root path " + this.rootPath + "): " + templatePath);
+                    case 5: throw new Error("Template not found: " + absolutePath);
                 }
             });
         });

@@ -1,6 +1,9 @@
 import axios from 'axios';
 import express from 'express';
+import * as path from 'path';
 import JsxPistols from '../dist/index';
+
+const JSX_PISTOLS_PATH = path.resolve(__dirname, '../dist/index.js');
 
 export interface TestContext {
   name: string;
@@ -29,11 +32,8 @@ test("[ JSX Pistols ]", async () => {
 
   await test("Express template engine", async () => {
     const app = express();
+    new JsxPistols({ rootPath: __dirname, expressApp: app });
 
-    const jsxPistols = new JsxPistols();
-    jsxPistols.registerEngine(app);
-
-    app.set('views', __dirname);
     app.get('/', (req, res) => {
       res.render('template', { name: 'world' })
     })

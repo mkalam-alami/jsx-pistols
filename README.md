@@ -37,14 +37,11 @@ console.log(result); // <div>Hello John!</div>
 **Express integration**
 
 ```typescript
-import JsxPistols from 'jsx-pistols';
-
 const app = express();
 
-const jsxPistols = new JsxPistols('path/to/templates');
-jsxPistols.registerEngine(app);
+new JsxPistols({ expressApp: app });
 
 app.get('/', (req, res) => {
-  res.render('mytemplate', { name: 'world' })
+  res.render('mytemplate', { name: 'John' })
 })
 ```
