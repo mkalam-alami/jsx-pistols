@@ -2,6 +2,8 @@
 
 TypeScript and JSX as web templates
 
+> WARNING: The library is currently in alpha and should be used at your own risk.
+
 ## Installation
 
 ```
