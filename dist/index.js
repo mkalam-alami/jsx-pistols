@@ -66,6 +66,10 @@ var cache_1 = __importDefault(require("./cache"));
 var transpiler_1 = require("./transpiler");
 exports.defaultBabelOptions = transpiler_1.defaultBabelOptions;
 var JsxPistols = /** @class */ (function () {
+    /**
+     * Creates a new JSX Pistols renderer.
+     * @param options Optional library options
+     */
     function JsxPistols(options) {
         if (options === void 0) { options = {}; }
         this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
@@ -106,8 +110,13 @@ var JsxPistols = /** @class */ (function () {
             app.set('views', this.toAbsolutePath(viewsPath));
         }
     };
+    /**
+     * Renders a template file.
+     * @param templatePath Path to the template, either absolute or relative to the specified `rootPath`. Extension may be omitted if using `.jsx` or `.tsx`.
+     * @param context Any context will be passed as a parameter to the template rendering function.
+     * @returns A promise resolving to the rendered string
+     */
     JsxPistols.prototype.render = function (templatePath, context) {
-        if (context === void 0) { context = {}; }
         return __awaiter(this, void 0, void 0, function () {
             var jsxTemplate;
             var _this = this;
