@@ -32,6 +32,11 @@ export interface JsxPistolsOptions {
    * Defaults to `0` (infinite).
    */
   maxCacheSize?: number;
+  /**
+   * Whether to prepend "<!doctype html>" if the root element is an <html> tag.
+   * Defaults to `true`.
+   */
+  prependDoctype?: boolean;
 }
 
 export default class JsxPistols {
@@ -39,6 +44,7 @@ export default class JsxPistols {
   private rootPath: string;
   private cache: Cache;
   private babelOptions?: Object;
+  private prependDoctype: boolean;
 
   /**
    * Creates a new JSX Pistols renderer.
@@ -47,6 +53,7 @@ export default class JsxPistols {
   constructor(options: Partial<JsxPistolsOptions> = {}) {
     this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
     this.babelOptions = options.babelOptions;
+    this.prependDoctype = options.prependDoctype !== undefined ? options.prependDoctype : true;
     this.cache = new Cache({
       disableCache: options.disableCache,
       maxCacheSize: options.maxCacheSize
@@ -86,7 +93,10 @@ export default class JsxPistols {
       const existingPath = await this.searchExistingPath(this.toAbsolutePath(templatePath));
       return transpileTsx(existingPath, this.babelOptions);
     });
-    return render(jsxTemplate(context));
+    const jsxOutput = jsxTemplate(context);
+    const renderedHtml = render(jsxOutput);
+    const prefix = (this.prependDoctype && jsxOutput.type === 'html') ? '<!doctype html>' : '';
+    return prefix + renderedHtml;
   }
 
   private toAbsolutePath(value: string, fromRoot?: string) {

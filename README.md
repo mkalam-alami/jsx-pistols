@@ -78,6 +78,7 @@ app.get('/', (req, res) => {
 * **babelOptions** *(object | string)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
 * **disableCache** *(boolean)*: Whether template caching is enabled. If `false`, it will be loaded from the disk on every render. Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
 * **maxCacheSize** *(number)*: The maximum number of templates to be kept in the cache. Unused if `disableCache` is set. Defaults to `0` (infinite).
+* **prependDoctype** *(boolean)*: Whether to prepend "\<!doctype html>" if the root element is an "\<html>" tag. Defaults to `true`.
 
 ### Methods
 

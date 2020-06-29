@@ -30,6 +30,15 @@ test("[ JSX Pistols ]", async () => {
     assert(result === '<div>Hello world!</div>');
   });
 
+  await test("HTML tag", async () => {
+    const jsxPistols = new JsxPistols();
+
+    const result = await jsxPistols.render('test/template2');
+    console.log(result);
+
+    assert(result === '<!doctype html><html><body>Hello world!</body></html>');
+  });
+
   await test("Express template engine", async () => {
     const app = express();
     new JsxPistols({ rootPath: __dirname, expressApp: app });
@@ -45,7 +54,6 @@ test("[ JSX Pistols ]", async () => {
 
       server.close();
     })
-
   });
 
 });

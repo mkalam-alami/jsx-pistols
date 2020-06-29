@@ -29,11 +29,17 @@ export interface JsxPistolsOptions {
      * Defaults to `0` (infinite).
      */
     maxCacheSize?: number;
+    /**
+     * Whether to prepend "<!doctype html>" if the root element is an <html> tag.
+     * Defaults to `true`.
+     */
+    prependDoctype?: boolean;
 }
 export default class JsxPistols {
     private rootPath;
     private cache;
     private babelOptions?;
+    private prependDoctype;
     /**
      * Creates a new JSX Pistols renderer.
      * @param options Optional library configuration

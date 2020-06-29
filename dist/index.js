@@ -74,6 +74,7 @@ var JsxPistols = /** @class */ (function () {
         if (options === void 0) { options = {}; }
         this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
         this.babelOptions = options.babelOptions;
+        this.prependDoctype = options.prependDoctype !== undefined ? options.prependDoctype : true;
         this.cache = new cache_1["default"]({
             disableCache: options.disableCache,
             maxCacheSize: options.maxCacheSize
@@ -119,7 +120,7 @@ var JsxPistols = /** @class */ (function () {
      */
     JsxPistols.prototype.render = function (templatePath, context) {
         return __awaiter(this, void 0, void 0, function () {
-            var jsxTemplate;
+            var jsxTemplate, jsxOutput, renderedHtml, prefix;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -136,7 +137,10 @@ var JsxPistols = /** @class */ (function () {
                         }); })];
                     case 1:
                         jsxTemplate = _a.sent();
-                        return [2 /*return*/, preact_render_to_string_1["default"](jsxTemplate(context))];
+                        jsxOutput = jsxTemplate(context);
+                        renderedHtml = preact_render_to_string_1["default"](jsxOutput);
+                        prefix = (this.prependDoctype && jsxOutput.type === 'html') ? '<!doctype html>' : '';
+                        return [2 /*return*/, prefix + renderedHtml];
                 }
             });
         });
