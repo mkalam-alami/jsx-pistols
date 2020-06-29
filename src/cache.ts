@@ -20,7 +20,7 @@ export default class Cache {
 
   public async wrap<T>(key: string, valueSupplier: () => Promise<T>): Promise<T> {
     if (this.cache) {
-      if (!this.cache.get(key)) {
+      if (!this.cache.has(key)) {
         this.cache.set(key, await valueSupplier());
       }
       return this.cache.get(key);
