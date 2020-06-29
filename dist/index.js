@@ -105,6 +105,7 @@ var JsxPistols = /** @class */ (function () {
         }); };
         app.engine('jsx', expressEngine);
         app.engine('tsx', expressEngine);
+        app.engine('js', expressEngine);
         app.set('view engine', 'tsx');
         if (viewsPath) {
             app.set('views', this.toAbsolutePath(viewsPath));

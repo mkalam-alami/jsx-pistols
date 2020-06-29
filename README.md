@@ -40,9 +40,11 @@ export default function render(context: MyControllerContext) {
 }
 ```
 
+In production, you can either copy the templates as-is, or compile them to JavaScript.
+
 ### Rendering
 
-Manually
+**Manually**
 
 ```typescript
 import JsxPistols from 'jsx-pistols';
@@ -53,7 +55,7 @@ const result = await jsxPistols.render('mytemplate', { name: 'John' });
 console.log(result); // <div>Hello John!</div>
 ```
 
-In an Express app
+**In an Express app**
 
 ```typescript
 const app = express();
@@ -72,8 +74,8 @@ app.get('/', (req, res) => {
 `new JsxPistols([options: Object])`
 
 * **rootPath** *(string)*: The root path from which templates will be resolved. Defaults to the current working directory.
-* **expressApp** *(object)*: An Express application that will be configured for using JSX Pistols as an engine (registers .jsx/.tsx extensions).
-* **babelOptions** *(object)*: Options object to pass to the Babel transpiler. By default, the transpiler will support TypeScript and ECMAScript modules (see below).
+* **expressApp** *(object)*: An Express application that will be configured for using JSX Pistols as an engine. Extensions .js, .jsx and .tsx will be registered.
+* **babelOptions** *(object | string)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
 * **disableCache** *(boolean)*: Whether template caching is enabled. If `false`, it will be loaded from the disk on every render. Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
 * **maxCacheSize** *(number)*: The maximum number of templates to be kept in the cache. Unused if `disableCache` is set. Defaults to `0` (infinite).
 

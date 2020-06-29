@@ -1,3 +1,4 @@
+import { BabelOptions } from './transpiler';
 export declare const defaultBabelOptions: {
     presets: any[][];
     plugins: any[];
@@ -14,9 +15,10 @@ export interface JsxPistolsOptions {
     expressApp?: any;
     /**
      * Options object to pass to the Babel transpiler.
+     * Pass `skip` to skip the transpiler completely (useful if templates are compiled in production).
      * By default, the transpiler will support TypeScript and ECMAScript modules.
      */
-    babelOptions?: Object;
+    babelOptions?: BabelOptions;
     /**
      * Whether template caching is enabled. If `false`, it will be loaded from the disk on every render.
      * Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.

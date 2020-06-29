@@ -90,18 +90,17 @@ exports.defaultBabelOptions = {
     ]
 };
 function transpileTsx(absolutePath, babelOptions) {
-    if (babelOptions === void 0) { babelOptions = exports.defaultBabelOptions; }
     return __awaiter(this, void 0, void 0, function () {
-        var tsxSources, transformResult, module;
+        var tsxSources, jsSources, module;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fs.readFile(absolutePath)];
                 case 1:
-                    tsxSources = (_a.sent()).toString();
-                    return [4 /*yield*/, babel.transformAsync(tsxSources, __assign(__assign({}, babelOptions), { filename: absolutePath }))];
+                    tsxSources = _a.sent();
+                    return [4 /*yield*/, babelTransform(tsxSources.toString(), absolutePath, babelOptions || exports.defaultBabelOptions)];
                 case 2:
-                    transformResult = _a.sent();
-                    module = require_from_string_1["default"](transformResult.code, absolutePath);
+                    jsSources = _a.sent();
+                    module = require_from_string_1["default"](jsSources, absolutePath);
                     if (typeof module["default"] !== 'function') {
                         throw new Error("Module's default export is missing or not a function: " + absolutePath);
                     }
@@ -111,3 +110,21 @@ function transpileTsx(absolutePath, babelOptions) {
     });
 }
 exports.transpileTsx = transpileTsx;
+function babelTransform(tsxSources, absolutePath, babelOptions) {
+    if (babelOptions === void 0) { babelOptions = exports.defaultBabelOptions; }
+    return __awaiter(this, void 0, void 0, function () {
+        var transformResult;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (babelOptions === 'skip') {
+                        return [2 /*return*/, tsxSources];
+                    }
+                    return [4 /*yield*/, babel.transformAsync(tsxSources, __assign(__assign({}, babelOptions), { filename: absolutePath }))];
+                case 1:
+                    transformResult = _a.sent();
+                    return [2 /*return*/, transformResult.code];
+            }
+        });
+    });
+}

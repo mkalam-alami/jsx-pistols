@@ -2,7 +2,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import render from 'preact-render-to-string';
 import Cache from './cache';
-import { defaultBabelOptions as defaultBabelOptionsTranspiler, transpileTsx } from './transpiler';
+import { BabelOptions, defaultBabelOptions as defaultBabelOptionsTranspiler, transpileTsx } from './transpiler';
 
 export const defaultBabelOptions = defaultBabelOptionsTranspiler;
 
@@ -18,9 +18,10 @@ export interface JsxPistolsOptions {
   expressApp?: any;
   /**
    * Options object to pass to the Babel transpiler.
+   * Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). 
    * By default, the transpiler will support TypeScript and ECMAScript modules.
    */
-  babelOptions?: Object;
+  babelOptions?: BabelOptions;
   /**
    * Whether template caching is enabled. If `false`, it will be loaded from the disk on every render.
    * Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
@@ -67,6 +68,7 @@ export default class JsxPistols {
 
     app.engine('jsx', expressEngine);
     app.engine('tsx', expressEngine);
+    app.engine('js', expressEngine);
     app.set('view engine', 'tsx');
     if (viewsPath) {
       app.set('views', this.toAbsolutePath(viewsPath));
