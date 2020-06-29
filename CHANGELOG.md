@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (June 29, 2020)
+
+* Prepend "\<!doctype html>" to "\<html>" tags by default
+* Support compiled .js templates
+* Allow disabling Babel transpiler
+* Fix templates not being found if an incomplete filename containing a dot is passed
+* Minor optimizations
+
 ## 0.1.1 (June 29, 2020)
 
 * Add TSDoc comments
