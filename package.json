@@ -40,11 +40,12 @@
     "url": "git+https://github.com/mkalam-alami/jsx-pistols.git"
   },
   "keywords": [
+    "express",
     "jsx",
-    "templating",
-    "typescript",
-    "react",
-    "preact"
+    "nodejs",
+    "server-side rendering",
+    "templates",
+    "typescript"
   ],
   "author": "Marwane Kalam-Alami",
   "bugs": {
