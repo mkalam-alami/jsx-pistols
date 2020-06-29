@@ -41,10 +41,15 @@
   },
   "keywords": [
     "express",
+    "html",
     "jsx",
     "nodejs",
+    "rendering",
+    "server",
     "server-side rendering",
+    "template",
     "templates",
+    "templating",
     "typescript"
   ],
   "author": "Marwane Kalam-Alami",
