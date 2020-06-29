@@ -36,11 +36,11 @@ import * as React from "preact";
 import { MyControllerContext } from "./mycontroller";
 
 export default function render(context: MyControllerContext) {
-  return <div>Hello {context.name}!</div>;
+  return <html><body>Hello {context.name}!</body></html>;
 }
 ```
 
-In production, you can either copy the templates as-is, or compile them to JavaScript.
+In production, you can either copy the files as-is, or compile them to JavaScript.
 
 ### Rendering
 
@@ -52,7 +52,7 @@ import JsxPistols from 'jsx-pistols';
 const jsxPistols = new JsxPistols({ rootPath: 'path/to/templates' });
 const result = await jsxPistols.render('mytemplate', { name: 'John' });
 
-console.log(result); // <div>Hello John!</div>
+console.log(result); // <!doctype html><html><body>Hello John!</body></html>
 ```
 
 **In an Express app**
