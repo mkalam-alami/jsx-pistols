@@ -145,33 +145,31 @@ var JsxPistols = /** @class */ (function () {
     };
     JsxPistols.prototype.searchExistingPath = function (templatePath) {
         return __awaiter(this, void 0, void 0, function () {
-            var absolutePath, extname, candidatePathJsx, candidatePathTsx;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var absolutePath, _i, _a, extension, candidatePath;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         absolutePath = path.resolve(this.rootPath, templatePath);
-                        extname = path.extname(absolutePath);
-                        if (!extname) return [3 /*break*/, 2];
                         return [4 /*yield*/, fs.pathExists(absolutePath)];
                     case 1:
-                        if (_a.sent()) {
+                        if (_b.sent()) {
                             return [2 /*return*/, absolutePath];
                         }
-                        return [3 /*break*/, 5];
+                        _i = 0, _a = ['.js', '.jsx', '.tsx'];
+                        _b.label = 2;
                     case 2:
-                        candidatePathJsx = absolutePath + '.jsx';
-                        return [4 /*yield*/, fs.pathExists(candidatePathJsx)];
+                        if (!(_i < _a.length)) return [3 /*break*/, 5];
+                        extension = _a[_i];
+                        candidatePath = absolutePath + extension;
+                        return [4 /*yield*/, fs.pathExists(candidatePath)];
                     case 3:
-                        if (_a.sent()) {
-                            return [2 /*return*/, candidatePathJsx];
+                        if (_b.sent()) {
+                            return [2 /*return*/, candidatePath];
                         }
-                        candidatePathTsx = absolutePath + '.tsx';
-                        return [4 /*yield*/, fs.pathExists(candidatePathTsx)];
+                        _b.label = 4;
                     case 4:
-                        if (_a.sent()) {
-                            return [2 /*return*/, candidatePathTsx];
-                        }
-                        _a.label = 5;
+                        _i++;
+                        return [3 /*break*/, 2];
                     case 5: throw new Error("Template not found: " + absolutePath);
                 }
             });

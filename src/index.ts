@@ -93,20 +93,14 @@ export default class JsxPistols {
 
   private async searchExistingPath(templatePath: string): Promise<string> {
     const absolutePath = path.resolve(this.rootPath, templatePath);
-    const extname = path.extname(absolutePath);
 
-    if (extname) {
-      if (await fs.pathExists(absolutePath)) {
-        return absolutePath;
-      }
-    } else {
-      const candidatePathJsx = absolutePath + '.jsx';
-      if (await fs.pathExists(candidatePathJsx)) {
-        return candidatePathJsx;
-      }
-      const candidatePathTsx = absolutePath + '.tsx';
-      if (await fs.pathExists(candidatePathTsx)) {
-        return candidatePathTsx;
+    if (await fs.pathExists(absolutePath)) {
+      return absolutePath;
+    }
+    for (const extension of ['.js', '.jsx', '.tsx']) {
+      const candidatePath = absolutePath + extension;
+      if (await fs.pathExists(candidatePath)) {
+        return candidatePath;
       }
     }
 
