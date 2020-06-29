@@ -75,7 +75,7 @@ app.get('/', (req, res) => {
 
 * **rootPath** *(string)*: The root path from which templates will be resolved. Defaults to the current working directory.
 * **expressApp** *(object)*: An Express application that will be configured for using JSX Pistols as an engine. Extensions .js, .jsx and .tsx will be registered.
-* **babelOptions** *(object | string)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
+* **babelOptions** *(object | `skip`)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
 * **disableCache** *(boolean)*: Whether template caching is enabled. If `false`, it will be loaded from the disk on every render. Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
 * **maxCacheSize** *(number)*: The maximum number of templates to be kept in the cache. Unused if `disableCache` is set. Defaults to `0` (infinite).
 * **prependDoctype** *(boolean)*: Whether to prepend "\<!doctype html>" if the root element is an "\<html>" tag. Defaults to `true`.
@@ -86,8 +86,8 @@ app.get('/', (req, res) => {
 
 Renders a template file.
 
-* **templatePath** (string): Path to the template. Either absolute, or relative to the specified `rootPath`. Extension may be omitted if `.jsx` or `.tsx`.
-* **context** (any): Any context will be passed as the first parameter of the template rendering function.
+* **templatePath** *(string)*: Path to the template. Either absolute, or relative to the specified `rootPath`. Extension may be omitted if `.jsx` or `.tsx`.
+* **context** *(any)*: Any context will be passed as the first parameter of the template rendering function.
 
 ### Template contract
 
