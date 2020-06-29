@@ -1,6 +1,6 @@
 {
   "name": "jsx-pistols",
-  "description": "TypeScript and JSX as web templates",
+  "description": "TypeScript and JSX as web templates, for NodeJS.",
   "version": "0.1.2-dev",
   "license": "MIT",
   "homepage": "https://github.com/mkalam-alami/jsx-pistols#readme",
@@ -42,7 +42,9 @@
   "keywords": [
     "jsx",
     "templating",
-    "typescript"
+    "typescript",
+    "react",
+    "preact"
   ],
   "author": "Marwane Kalam-Alami",
   "bugs": {

@@ -1,6 +1,6 @@
 # JSX Pistols
 
-TypeScript and JSX as web templates. For NodeJS.
+TypeScript and JSX as web templates, for NodeJS.
 
 * Allows importing your app sources & typings from the templates
 * Caching
@@ -9,6 +9,17 @@ TypeScript and JSX as web templates. For NodeJS.
 Under the hood, this is just a thin wrapper for [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string) and [Babel](https://babeljs.io/).
 
 > WARNING: JSX Pistols is currently in alpha. Github issues are welcome.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [API reference](#api-reference)
+  - [Constructor](#constructor)
+  - [Methods](#methods)
+  - [Template contract](#template-contract)
+  - [Default Babel options](#default-babel-options)
+- [Caveats](#caveats)
 
 ## Installation
 
@@ -21,6 +32,7 @@ npm install jsx-pistols
 ### Template
 
 ```jsx
+import * as React from "preact";
 import { MyControllerContext } from "./mycontroller";
 
 export default function render(context: MyControllerContext) {
@@ -79,6 +91,8 @@ Renders a template file.
 The only requirement is that the **default export must be a function returning a JSX element**. Minimal example:
 
 ```jsx
+import * as React from "preact";
+
 export default function render(context: any) {
   return <div></div>;
 }
