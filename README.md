@@ -74,7 +74,7 @@ app.get('/', (req, res) => {
 Renders a template file.
 
 | parameter | type | description | 
-| --- | ---- | ------- | ----------- |
+| --- | ---- | ------- |
 | **templatePath** | string | Path to the template. Either absolute, or relative to the specified `rootPath`. Extension may be omitted if `.jsx` or `.tsx`. |
 | **context** | any | Any context will be passed as the first parameter of the template rendering function. | 
 
