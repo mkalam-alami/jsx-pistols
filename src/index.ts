@@ -41,7 +41,7 @@ export default class JsxPistols {
 
   /**
    * Creates a new JSX Pistols renderer.
-   * @param options Optional library options
+   * @param options Optional library configuration
    */
   constructor(options: Partial<JsxPistolsOptions> = {}) {
     this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
@@ -65,8 +65,8 @@ export default class JsxPistols {
       }
     }
 
-    app.engine('jsx', expressEngine.bind(this));
-    app.engine('tsx', expressEngine.bind(this));
+    app.engine('jsx', expressEngine);
+    app.engine('tsx', expressEngine);
     app.set('view engine', 'tsx');
     if (viewsPath) {
       app.set('views', this.toAbsolutePath(viewsPath));

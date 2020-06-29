@@ -68,7 +68,7 @@ exports.defaultBabelOptions = transpiler_1.defaultBabelOptions;
 var JsxPistols = /** @class */ (function () {
     /**
      * Creates a new JSX Pistols renderer.
-     * @param options Optional library options
+     * @param options Optional library configuration
      */
     function JsxPistols(options) {
         if (options === void 0) { options = {}; }
@@ -103,8 +103,8 @@ var JsxPistols = /** @class */ (function () {
                 }
             });
         }); };
-        app.engine('jsx', expressEngine.bind(this));
-        app.engine('tsx', expressEngine.bind(this));
+        app.engine('jsx', expressEngine);
+        app.engine('tsx', expressEngine);
         app.set('view engine', 'tsx');
         if (viewsPath) {
             app.set('views', this.toAbsolutePath(viewsPath));

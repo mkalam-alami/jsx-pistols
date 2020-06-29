@@ -18,13 +18,13 @@ export interface JsxPistolsOptions {
      */
     babelOptions?: Object;
     /**
-     * Whether template caching is enabled. If false, it will be loaded from the disk on every render.
-     * Defaults to `true` if NODE_ENV is set to 'production', `false`.
+     * Whether template caching is enabled. If `false`, it will be loaded from the disk on every render.
+     * Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
      */
     disableCache?: boolean;
     /**
      * The maximum number of templates to be kept in the cache. Unused if `disableCache` is set.
-     * Defaults to 0 (infinite).
+     * Defaults to `0` (infinite).
      */
     maxCacheSize?: number;
 }
@@ -34,7 +34,7 @@ export default class JsxPistols {
     private babelOptions?;
     /**
      * Creates a new JSX Pistols renderer.
-     * @param options Optional library options
+     * @param options Optional library configuration
      */
     constructor(options?: Partial<JsxPistolsOptions>);
     private registerToExpressApp;

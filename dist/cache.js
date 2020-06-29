@@ -56,7 +56,7 @@ var Cache = /** @class */ (function () {
                 switch (_d.label) {
                     case 0:
                         if (!this.cache) return [3 /*break*/, 3];
-                        if (!!this.cache.get(key)) return [3 /*break*/, 2];
+                        if (!!this.cache.has(key)) return [3 /*break*/, 2];
                         _b = (_a = this.cache).set;
                         _c = [key];
                         return [4 /*yield*/, valueSupplier()];
