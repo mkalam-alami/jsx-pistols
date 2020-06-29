@@ -2,9 +2,11 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import render from 'preact-render-to-string';
 import Cache from './cache';
-import { BabelOptions, defaultBabelOptions as defaultBabelOptionsTranspiler, transpileTsx } from './transpiler';
+import { BabelOptions as TranspilerBabelOptions, defaultBabelOptions as defaultTranspilerBabelOptions, transpileTsx } from './transpiler';
 
-export const defaultBabelOptions = defaultBabelOptionsTranspiler;
+export const defaultBabelOptions = defaultTranspilerBabelOptions;
+
+export type BabelOptions = TranspilerBabelOptions;
 
 export interface JsxPistolsOptions {
   /**
@@ -73,9 +75,9 @@ export default class JsxPistols {
       }
     }
 
+    app.engine('js', expressEngine);
     app.engine('jsx', expressEngine);
     app.engine('tsx', expressEngine);
-    app.engine('js', expressEngine);
     app.set('view engine', 'tsx');
     if (viewsPath) {
       app.set('views', this.toAbsolutePath(viewsPath));
