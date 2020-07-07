@@ -2,3 +2,5 @@ node_modules
 src
 test
 tsconfig.json
+dist/cache.d.ts
+dist/transpiler.d.ts
