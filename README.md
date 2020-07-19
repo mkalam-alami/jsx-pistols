@@ -153,3 +153,17 @@ declare module "preact" {
   }
 }
 ```
+
+* **JSX wrapper typings**
+
+When using the custom `jsx-wrapper` tag (or your own renaming of it), you will need to declare it. Here is how to do it with Preact:
+
+```typescript
+declare module "preact" {
+  namespace JSX {
+    interface IntrinsicElements {
+      ["jsx-wrapper"]: HTMLAttributes<HTMLElement>;
+    }
+  }
+}
+```

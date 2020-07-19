@@ -1,9 +1,6 @@
 import axios from 'axios';
 import express from 'express';
-import * as path from 'path';
 import JsxPistols from '../dist/index';
-
-const JSX_PISTOLS_PATH = path.resolve(__dirname, '../dist/index.js');
 
 export interface TestContext {
   name: string;
@@ -14,7 +11,7 @@ test("[ JSX Pistols ]", async () => {
   await test("Default templates root", async () => {
     const jsxPistols = new JsxPistols();
 
-    const result = await jsxPistols.render('test/template', { name: 'world' });
+    const result = await jsxPistols.render('test/template-div', { name: 'world' });
     console.log(result);
 
     assert(result === '<div>Hello world!</div>');
@@ -24,7 +21,7 @@ test("[ JSX Pistols ]", async () => {
     const jsxPistols = new JsxPistols({ rootPath: __dirname });
 
     const context: TestContext = { name: 'world' };
-    const result = await jsxPistols.render('template.tsx', context);
+    const result = await jsxPistols.render('template-div.tsx', context);
     console.log(result);
 
     assert(result === '<div>Hello world!</div>');
@@ -33,18 +30,27 @@ test("[ JSX Pistols ]", async () => {
   await test("HTML tag", async () => {
     const jsxPistols = new JsxPistols();
 
-    const result = await jsxPistols.render('test/template2');
+    const result = await jsxPistols.render('test/template-html');
     console.log(result);
 
     assert(result === '<!doctype html><html><body>Hello world!</body></html>');
   });
 
+  await test("Wrapper tag", async () => {
+    const jsxPistols = new JsxPistols();
+
+    const result = await jsxPistols.render('test/template-wrapper', { name: 'world' });
+    console.log(result);
+
+    assert(result === '<div>Hello world!</div>');
+  });
+  
   await test("Express template engine", async () => {
     const app = express();
     new JsxPistols({ rootPath: __dirname, expressApp: app });
 
     app.get('/', (req, res) => {
-      res.render('template', { name: 'world' })
+      res.render('template-div', { name: 'world' })
     })
 
     const server = app.listen(8787, async () => {
