@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Support wrapper tags that will be discarded from the output
+
 ## 0.2.0 (June 29, 2020)
 
 * Prepend "\<!doctype html>" to "\<html>" tags by default
