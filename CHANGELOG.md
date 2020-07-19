@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 (July 19, 2020)
 
 * Support wrapper tags that will be discarded from the output
 * Upgrade all dependencies
