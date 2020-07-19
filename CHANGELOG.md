@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Support wrapper tags that will be discarded from the output
+* Upgrade all dependencies
 
 ## 0.2.0 (June 29, 2020)
 
