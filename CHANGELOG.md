@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 (July 21, 2020)
+
+* Downgrade fs-extra to 8.1.0 for better Node compatibility
+
 ## 0.3.1 (July 19, 2020)
 
 * Support wrapper tags that will be discarded from the output
