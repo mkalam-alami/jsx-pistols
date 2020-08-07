@@ -36,13 +36,13 @@ test("[ JSX Pistols ]", async () => {
     assert(result === '<!doctype html><html><body>Hello world!</body></html>');
   });
 
-  await test("Wrapper tag", async () => {
+  await test("Fragment", async () => {
     const jsxPistols = new JsxPistols();
 
-    const result = await jsxPistols.render('test/template-wrapper', { name: 'world' });
+    const result = await jsxPistols.render('test/template-fragment', { name: 'world' });
     console.log(result);
 
-    assert(result === '<div>Hello world!</div>');
+    assert(result === '<div>Hello</div><div>world!</div>');
   });
   
   await test("Express template engine", async () => {

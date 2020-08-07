@@ -26,12 +26,6 @@ export interface JsxPistolsOptions {
      */
     disableCache?: boolean;
     /**
-     * Name of a custom wrapper tag that will be discarded from the rendered HTML.
-     * Useful to avoid unnecessary <div> wrappers in the code.
-     * Defaults to `jsx-wrapper`, meaning that any `<jsx-wrapper></jsx-wrapper>` tags will be removed from the output.
-     */
-    wrapperTagName?: string;
-    /**
      * The maximum number of templates to be kept in the cache. Unused if `disableCache` is set.
      * Defaults to `0` (infinite).
      */
@@ -47,7 +41,6 @@ export default class JsxPistols {
     private cache;
     private babelOptions?;
     private prependDoctype;
-    private wrapperTagRegexp;
     /**
      * Creates a new JSX Pistols renderer.
      * @param options Optional library configuration

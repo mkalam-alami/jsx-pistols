@@ -77,7 +77,6 @@ app.get('/', (req, res) => {
 * **expressApp** *(object)*: An Express application that will be configured for using JSX Pistols as an engine. Extensions .js, .jsx and .tsx will be registered.
 * **babelOptions** *(object | `skip`)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
 * **disableCache** *(boolean)*: Whether template caching is enabled. If `false`, it will be loaded from the disk on every render. Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
-* **wrapperTagName** *(string)*: Name of a custom wrapper tag that will be discarded from the rendered HTML. Useful to avoid unnecessary `<div>` wrappers in the code. Defaults to `jsx-wrapper`, meaning that any `<jsx-wrapper></jsx-wrapper>` tags will be removed from the output.
 * **maxCacheSize** *(number)*: The maximum number of templates to be kept in the cache. Unused if `disableCache` is set. Defaults to `0` (infinite).
 * **prependDoctype** *(boolean)*: Whether to prepend "\<!doctype html>" if the root element is an "\<html>" tag. Defaults to `true`.
 
@@ -106,7 +105,7 @@ Asynchronous functions are supported (promises will be resolved), although they 
 
 ### Default Babel options
 
-By default, the transpiler will support TypeScript and ECMAScript modules. If you don't need one or either, or have different features to support, you will need to override this object.
+By default, the transpiler will support TypeScript and JSX. If you have different features to support, you will need to override this object. The `@babel/plugin-transform-modules-commonjs` plugin is however mandatory, not keeping it will break all templates.
 
 See also the [Babel options reference](https://babeljs.io/docs/en/options).
 
@@ -126,13 +125,27 @@ See also the [Babel options reference](https://babeljs.io/docs/en/options).
 }
 ```
 
-## Caveats
+## Tips and caveats
 
-JSX is not HTML, so your templates may have to work around some issues.
+Your templates may have to work around some issues due to the nature of JSX.
 
 * **`class` vs `className`**
 
 Prefer using Preact over React for your JSX typings, as the former accepts `class` as an attribute. Although both will be rendered properly.
+
+* **Functions returing multiple tags**
+
+Use ![fragments](https://reactjs.org/docs/fragments.html):
+
+```jsx
+function listElements() {
+  return <>
+    <li></li>
+    <li></li>
+    <li></li>
+  </>;
+}
+```
 
 * **Using handler attributes**
 
@@ -149,20 +162,6 @@ declare module "preact" {
     interface HTMLAttributes<RefType extends EventTarget = EventTarget>
         extends preact.ClassAttributes<RefType>, DOMAttributes<RefType> {
       onclick?: string;
-    }
-  }
-}
-```
-
-* **JSX wrapper typings**
-
-When using the custom `jsx-wrapper` tag (or your own renaming of it), you will need to declare it. Here is how to do it with Preact:
-
-```typescript
-declare module "preact" {
-  namespace JSX {
-    interface IntrinsicElements {
-      ["jsx-wrapper"]: HTMLAttributes<HTMLElement>;
     }
   }
 }

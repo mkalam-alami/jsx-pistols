@@ -30,12 +30,6 @@ export interface JsxPistolsOptions {
    */
   disableCache?: boolean;
   /**
-   * Name of a custom wrapper tag that will be discarded from the rendered HTML.
-   * Useful to avoid unnecessary <div> wrappers in the code.
-   * Defaults to `jsx-wrapper`, meaning that any `<jsx-wrapper></jsx-wrapper>` tags will be removed from the output.
-   */
-  wrapperTagName?: string;
-  /**
    * The maximum number of templates to be kept in the cache. Unused if `disableCache` is set.
    * Defaults to `0` (infinite).
    */
@@ -53,7 +47,6 @@ export default class JsxPistols {
   private cache: Cache;
   private babelOptions?: Object;
   private prependDoctype: boolean;
-  private wrapperTagRegexp: RegExp;
 
   /**
    * Creates a new JSX Pistols renderer.
@@ -67,7 +60,6 @@ export default class JsxPistols {
       disableCache: options.disableCache,
       maxCacheSize: options.maxCacheSize
     });
-    this.wrapperTagRegexp = new RegExp(`<\\/?${options.wrapperTagName || 'jsx-wrapper'}>`, 'g');
     if (options.expressApp) {
       this.registerToExpressApp(options.expressApp, options.rootPath);
     }
@@ -106,7 +98,7 @@ export default class JsxPistols {
     const jsxOutput = jsxTemplate(context);
     const renderedHtml = render(jsxOutput);
     const prefix = (this.prependDoctype && jsxOutput.type === 'html') ? '<!doctype html>' : '';
-    return prefix + renderedHtml.replace(this.wrapperTagRegexp, '');
+    return prefix + renderedHtml;
   }
 
   private toAbsolutePath(value: string, fromRoot?: string) {

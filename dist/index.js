@@ -79,7 +79,6 @@ var JsxPistols = /** @class */ (function () {
             disableCache: options.disableCache,
             maxCacheSize: options.maxCacheSize
         });
-        this.wrapperTagRegexp = new RegExp("<\\/?" + (options.wrapperTagName || 'jsx-wrapper') + ">", 'g');
         if (options.expressApp) {
             this.registerToExpressApp(options.expressApp, options.rootPath);
         }
@@ -141,7 +140,7 @@ var JsxPistols = /** @class */ (function () {
                         jsxOutput = jsxTemplate(context);
                         renderedHtml = preact_render_to_string_1["default"](jsxOutput);
                         prefix = (this.prependDoctype && jsxOutput.type === 'html') ? '<!doctype html>' : '';
-                        return [2 /*return*/, prefix + renderedHtml.replace(this.wrapperTagRegexp, '')];
+                        return [2 /*return*/, prefix + renderedHtml];
                 }
             });
         });
