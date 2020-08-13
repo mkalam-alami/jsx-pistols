@@ -27,7 +27,7 @@ export interface JsxPistolsOptions {
   babelOptions?: BabelOptions;
   /**
    * Whether template caching is disabled. If `true`, it will be loaded from the disk on every render.
-   * The library will also make an effort to prevent Node from caching imported templates.
+   * The library will also prevent Node from caching code that is only imported in templates.
    * Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
    */
   disableCache?: boolean;

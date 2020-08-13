@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 (August 13, 2020)
 
-* Invalidate required templates in dev mode
+* Invalidate require cache for imported templates in dev mode
 * Drop support for wrapper tags (templates should use fragments instead)
 
 ## 0.3.2 (July 21, 2020)
