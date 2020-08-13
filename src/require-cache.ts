@@ -1,10 +1,8 @@
 import { Minimatch, IMinimatch } from "minimatch";
 import * as path from "path";
 
-export default function takeRequireCacheSnapshot(options: RequireCacheSnapshotOptions = {}): RequireCacheSnapshot {
-  const snapshot = new RequireCacheSnapshotImpl(options);
-  snapshot.capture();
-  return snapshot;
+export default function takeRequireCacheSnapshot(options: RequireCacheSnapshotOptions = {}) {
+  return new RequireCacheSnapshot(options);
 }
 
 export interface RequireCacheSnapshotOptions {
@@ -13,26 +11,19 @@ export interface RequireCacheSnapshotOptions {
   bypass?: boolean;
 }
 
-export interface RequireCacheSnapshot {
-  restore(): void;
-}
+export class RequireCacheSnapshot {
 
-class RequireCacheSnapshotImpl implements RequireCacheSnapshot {
-
-  private initialSnapshot: string[];
-  private excludeMatchers: IMinimatch[] = [];
+  private initialSnapshot: string[] = [];
   private rootPath?: string;
+  private ignorePathsMatchers: IMinimatch[] = [];
 
   constructor(options: RequireCacheSnapshotOptions) {
+    this.initialSnapshot = Object.keys(require.cache);
     this.rootPath = options.rootPath;
     if (options.ignore) {
-      this.excludeMatchers = options.ignore
+      this.ignorePathsMatchers = options.ignore
         .map(excludeExpression => new Minimatch(excludeExpression));
     }
-  }
-
-  public capture() {
-    this.initialSnapshot = Object.keys(require.cache);
   }
 
   public restore() {
@@ -43,9 +34,9 @@ class RequireCacheSnapshotImpl implements RequireCacheSnapshot {
       if (this.rootPath && path.relative(this.rootPath, newRequiredPath).startsWith('..')) {
         return;
       }
-      // Ignore excluded files
-      for (const excludeMatcher of this.excludeMatchers) {
-        if (excludeMatcher.match(newRequiredPath)) {
+      // Ignore files by paths matchers
+      for (const matcher of this.ignorePathsMatchers) {
+        if (matcher.match(newRequiredPath)) {
           return;
         }
       }
