@@ -19,7 +19,7 @@ Under the hood, this is just a thin wrapper for [preact-render-to-string](https:
   - [Methods](#methods)
   - [Template contract](#template-contract)
   - [Default Babel options](#default-babel-options)
-- [Caveats](#caveats)
+- [Tips and caveats](#tips-and-caveats)
 
 ## Installation
 
