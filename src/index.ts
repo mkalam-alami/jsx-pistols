@@ -1,7 +1,8 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import render from 'preact-render-to-string';
-import Cache from './cache';
+import TemplateCache from './template-cache';
+import takeRequireCacheSnapshot from './require-cache';
 import { BabelOptions as TranspilerBabelOptions, defaultBabelOptions as defaultTranspilerBabelOptions, transpileTsx } from './transpiler';
 
 export const defaultBabelOptions = defaultTranspilerBabelOptions;
@@ -25,8 +26,9 @@ export interface JsxPistolsOptions {
    */
   babelOptions?: BabelOptions;
   /**
-   * Whether template caching is enabled. If `false`, it will be loaded from the disk on every render.
-   * Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
+   * Whether template caching is disabled. If `true`, it will be loaded from the disk on every render.
+   * The library will also make an effort to prevent Node from caching imported templates.
+   * Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
    */
   disableCache?: boolean;
   /**
@@ -44,22 +46,28 @@ export interface JsxPistolsOptions {
 export default class JsxPistols {
 
   private rootPath: string;
-  private cache: Cache;
+  private templateCache: TemplateCache;
   private babelOptions?: Object;
   private prependDoctype: boolean;
+  private disableCache: boolean;
 
   /**
    * Creates a new JSX Pistols renderer.
    * @param options Optional library configuration
    */
   constructor(options: Partial<JsxPistolsOptions> = {}) {
+    const isDevEnv = process.env.NODE_ENV !== 'production';
+
     this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
     this.babelOptions = options.babelOptions;
-    this.prependDoctype = options.prependDoctype !== undefined ? options.prependDoctype : true;
-    this.cache = new Cache({
-      disableCache: options.disableCache,
+    this.prependDoctype = options.prependDoctype ?? true;
+    this.disableCache = options.disableCache ?? isDevEnv;
+
+    this.templateCache = new TemplateCache({
+      disable: this.disableCache,
       maxCacheSize: options.maxCacheSize
     });
+
     if (options.expressApp) {
       this.registerToExpressApp(options.expressApp, options.rootPath);
     }
@@ -91,9 +99,14 @@ export default class JsxPistols {
    * @returns A promise resolving to the rendered string
    */
   public async render<T>(templatePath: string, context?: T): Promise<string> {
-    const jsxTemplate = await this.cache.wrap(templatePath, async () => {
+    const jsxTemplate = await this.templateCache.wrap(templatePath, async () => {
       const existingPath = await this.searchExistingPath(this.toAbsolutePath(templatePath));
-      return transpileTsx(existingPath, this.babelOptions);
+      const requireCacheSnapshot = this.disableCache
+        ? takeRequireCacheSnapshot({ rootPath: this.rootPath, ignore: ['**/node_modules/**'] })
+        : undefined;
+      const output = await transpileTsx(existingPath, this.babelOptions);
+      requireCacheSnapshot?.restore();
+      return output;
     });
     const jsxOutput = jsxTemplate(context);
     const renderedHtml = render(jsxOutput);

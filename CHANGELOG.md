@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Invalidate required templates in dev mode
 * Drop support for wrapper tags (templates should use fragments instead)
 
 ## 0.3.2 (July 21, 2020)

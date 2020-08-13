@@ -76,7 +76,7 @@ app.get('/', (req, res) => {
 * **rootPath** *(string)*: The root path from which templates will be resolved. Defaults to the current working directory.
 * **expressApp** *(object)*: An Express application that will be configured for using JSX Pistols as an engine. Extensions .js, .jsx and .tsx will be registered.
 * **babelOptions** *(object | `skip`)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
-* **disableCache** *(boolean)*: Whether template caching is enabled. If `false`, it will be loaded from the disk on every render. Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
+* **disableCache** *(boolean)*: Whether template caching is disabled. If `true`, it will be loaded from the disk on every render. The library will also make an effort to prevent Node from caching imported templates. Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
 * **maxCacheSize** *(number)*: The maximum number of templates to be kept in the cache. Unused if `disableCache` is set. Defaults to `0` (infinite).
 * **prependDoctype** *(boolean)*: Whether to prepend "\<!doctype html>" if the root element is an "\<html>" tag. Defaults to `true`.
 

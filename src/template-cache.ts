@@ -1,17 +1,16 @@
 import LRUCache from 'lru-cache';
 
-export interface CacheOptions {
+export interface TemplateCacheOptions {
   maxCacheSize?: number;
-  disableCache?: boolean;
+  disable?: boolean;
 }
 
-export default class Cache {
+export default class TemplateCache {
 
   private cache?: LRUCache<string, any>;
 
-  constructor(options: CacheOptions) {
-    const disableCache = options.disableCache !== undefined ? options.disableCache : process.env.NODE_ENV !== 'production';
-    if (!disableCache) {
+  constructor(options: TemplateCacheOptions) {
+    if (!options.disable) {
       this.cache = new LRUCache({
         max: options.maxCacheSize || 0
       })

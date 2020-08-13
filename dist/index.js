@@ -62,7 +62,8 @@ exports.defaultBabelOptions = void 0;
 var fs = __importStar(require("fs-extra"));
 var path = __importStar(require("path"));
 var preact_render_to_string_1 = __importDefault(require("preact-render-to-string"));
-var cache_1 = __importDefault(require("./cache"));
+var template_cache_1 = __importDefault(require("./template-cache"));
+var require_cache_1 = __importDefault(require("./require-cache"));
 var transpiler_1 = require("./transpiler");
 exports.defaultBabelOptions = transpiler_1.defaultBabelOptions;
 var JsxPistols = /** @class */ (function () {
@@ -72,11 +73,14 @@ var JsxPistols = /** @class */ (function () {
      */
     function JsxPistols(options) {
         if (options === void 0) { options = {}; }
+        var _a, _b;
+        var isDevEnv = process.env.NODE_ENV !== 'production';
         this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
         this.babelOptions = options.babelOptions;
-        this.prependDoctype = options.prependDoctype !== undefined ? options.prependDoctype : true;
-        this.cache = new cache_1["default"]({
-            disableCache: options.disableCache,
+        this.prependDoctype = (_a = options.prependDoctype) !== null && _a !== void 0 ? _a : true;
+        this.disableCache = (_b = options.disableCache) !== null && _b !== void 0 ? _b : isDevEnv;
+        this.templateCache = new template_cache_1["default"]({
+            disable: this.disableCache,
             maxCacheSize: options.maxCacheSize
         });
         if (options.expressApp) {
@@ -124,14 +128,21 @@ var JsxPistols = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.cache.wrap(templatePath, function () { return __awaiter(_this, void 0, void 0, function () {
-                            var existingPath;
+                    case 0: return [4 /*yield*/, this.templateCache.wrap(templatePath, function () { return __awaiter(_this, void 0, void 0, function () {
+                            var existingPath, requireCacheSnapshot, output;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.searchExistingPath(this.toAbsolutePath(templatePath))];
                                     case 1:
                                         existingPath = _a.sent();
-                                        return [2 /*return*/, transpiler_1.transpileTsx(existingPath, this.babelOptions)];
+                                        requireCacheSnapshot = this.disableCache
+                                            ? require_cache_1["default"]({ rootPath: this.rootPath, ignore: ['**/node_modules/**'] })
+                                            : undefined;
+                                        return [4 /*yield*/, transpiler_1.transpileTsx(existingPath, this.babelOptions)];
+                                    case 2:
+                                        output = _a.sent();
+                                        requireCacheSnapshot === null || requireCacheSnapshot === void 0 ? void 0 : requireCacheSnapshot.restore();
+                                        return [2 /*return*/, output];
                                 }
                             });
                         }); })];

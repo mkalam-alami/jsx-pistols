@@ -21,8 +21,9 @@ export interface JsxPistolsOptions {
      */
     babelOptions?: BabelOptions;
     /**
-     * Whether template caching is enabled. If `false`, it will be loaded from the disk on every render.
-     * Defaults to `true` if NODE_ENV is set to 'production', `false` otherwise.
+     * Whether template caching is disabled. If `true`, it will be loaded from the disk on every render.
+     * The library will also make an effort to prevent Node from caching imported templates.
+     * Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
      */
     disableCache?: boolean;
     /**
@@ -38,9 +39,10 @@ export interface JsxPistolsOptions {
 }
 export default class JsxPistols {
     private rootPath;
-    private cache;
+    private templateCache;
     private babelOptions?;
     private prependDoctype;
+    private disableCache;
     /**
      * Creates a new JSX Pistols renderer.
      * @param options Optional library configuration
