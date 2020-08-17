@@ -4,6 +4,11 @@ export interface RequireCacheSnapshotOptions {
     ignore?: string[];
     bypass?: boolean;
 }
-export interface RequireCacheSnapshot {
+export declare class RequireCacheSnapshot {
+    private initialSnapshot;
+    private rootPath?;
+    private ignorePathsMatchers;
+    constructor(options: RequireCacheSnapshotOptions);
     restore(): void;
+    private difference;
 }

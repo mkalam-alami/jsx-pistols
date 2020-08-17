@@ -19,28 +19,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 exports.__esModule = true;
+exports.RequireCacheSnapshot = void 0;
 var minimatch_1 = require("minimatch");
 var path = __importStar(require("path"));
 function takeRequireCacheSnapshot(options) {
     if (options === void 0) { options = {}; }
-    var snapshot = new RequireCacheSnapshotImpl(options);
-    snapshot.capture();
-    return snapshot;
+    return new RequireCacheSnapshot(options);
 }
 exports["default"] = takeRequireCacheSnapshot;
-var RequireCacheSnapshotImpl = /** @class */ (function () {
-    function RequireCacheSnapshotImpl(options) {
-        this.excludeMatchers = [];
+var RequireCacheSnapshot = /** @class */ (function () {
+    function RequireCacheSnapshot(options) {
+        this.initialSnapshot = [];
+        this.ignorePathsMatchers = [];
+        this.initialSnapshot = Object.keys(require.cache);
         this.rootPath = options.rootPath;
         if (options.ignore) {
-            this.excludeMatchers = options.ignore
+            this.ignorePathsMatchers = options.ignore
                 .map(function (excludeExpression) { return new minimatch_1.Minimatch(excludeExpression); });
         }
     }
-    RequireCacheSnapshotImpl.prototype.capture = function () {
-        this.initialSnapshot = Object.keys(require.cache);
-    };
-    RequireCacheSnapshotImpl.prototype.restore = function () {
+    RequireCacheSnapshot.prototype.restore = function () {
         var _this = this;
         var currentSnapshot = Object.keys(require.cache);
         var newRequiredPaths = this.difference(currentSnapshot, this.initialSnapshot);
@@ -49,10 +47,10 @@ var RequireCacheSnapshotImpl = /** @class */ (function () {
             if (_this.rootPath && path.relative(_this.rootPath, newRequiredPath).startsWith('..')) {
                 return;
             }
-            // Ignore excluded files
-            for (var _i = 0, _a = _this.excludeMatchers; _i < _a.length; _i++) {
-                var excludeMatcher = _a[_i];
-                if (excludeMatcher.match(newRequiredPath)) {
+            // Ignore files by paths matchers
+            for (var _i = 0, _a = _this.ignorePathsMatchers; _i < _a.length; _i++) {
+                var matcher = _a[_i];
+                if (matcher.match(newRequiredPath)) {
                     return;
                 }
             }
@@ -60,7 +58,7 @@ var RequireCacheSnapshotImpl = /** @class */ (function () {
             delete require.cache[newRequiredPath];
         });
     };
-    RequireCacheSnapshotImpl.prototype.difference = function (initial, substract) {
+    RequireCacheSnapshot.prototype.difference = function (initial, substract) {
         var difference = new Set(initial);
         for (var _i = 0, substract_1 = substract; _i < substract_1.length; _i++) {
             var elem = substract_1[_i];
@@ -68,5 +66,6 @@ var RequireCacheSnapshotImpl = /** @class */ (function () {
         }
         return difference;
     };
-    return RequireCacheSnapshotImpl;
+    return RequireCacheSnapshot;
 }());
+exports.RequireCacheSnapshot = RequireCacheSnapshot;

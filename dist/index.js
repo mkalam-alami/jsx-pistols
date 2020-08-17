@@ -74,6 +74,7 @@ var JsxPistols = /** @class */ (function () {
     function JsxPistols(options) {
         if (options === void 0) { options = {}; }
         var _a, _b;
+        this.expressEngine = this.expressEngineInternal.bind(this);
         var isDevEnv = process.env.NODE_ENV !== 'production';
         this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
         this.babelOptions = options.babelOptions;
@@ -88,8 +89,15 @@ var JsxPistols = /** @class */ (function () {
         }
     }
     JsxPistols.prototype.registerToExpressApp = function (app, viewsPath) {
-        var _this = this;
-        var expressEngine = function (filePath, options, callback) { return __awaiter(_this, void 0, void 0, function () {
+        app.engine('js', this.expressEngine);
+        app.engine('jsx', this.expressEngine);
+        app.engine('tsx', this.expressEngine);
+        if (viewsPath) {
+            app.set('views', this.toAbsolutePath(viewsPath));
+        }
+    };
+    JsxPistols.prototype.expressEngineInternal = function (filePath, options, callback) {
+        return __awaiter(this, void 0, void 0, function () {
             var output, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -107,14 +115,7 @@ var JsxPistols = /** @class */ (function () {
                     case 3: return [2 /*return*/];
                 }
             });
-        }); };
-        app.engine('js', expressEngine);
-        app.engine('jsx', expressEngine);
-        app.engine('tsx', expressEngine);
-        app.set('view engine', 'tsx');
-        if (viewsPath) {
-            app.set('views', this.toAbsolutePath(viewsPath));
-        }
+        });
     };
     /**
      * Renders a template file.

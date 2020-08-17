@@ -2,13 +2,12 @@
 
 TypeScript and JSX as web templates, for NodeJS.
 
-* Allows importing your app sources & typings from the templates
-* Caching
+* Importing your app sources & typings from your templates
 * Express support
+* Template caching
+* Hot reload support
 
 Under the hood, this is just a thin wrapper for [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string) and [Babel](https://babeljs.io/).
-
-> WARNING: JSX Pistols is currently in alpha. Github issues are welcome.
 
 ## Table of Contents
 
@@ -62,6 +61,8 @@ const app = express();
 
 new JsxPistols({ expressApp: app });
 
+app.set("view engine", "tsx"); // Can be switched to "js" in production
+
 app.get('/', (req, res) => {
   res.render('mytemplate', { name: 'John' })
 })
@@ -81,13 +82,17 @@ app.get('/', (req, res) => {
 * **prependDoctype** *(boolean)*: Whether to prepend "\<!doctype html>" if the root element is an "\<html>" tag. Defaults to `true`.
 
 ### Methods
-
+  
 `jsxPistols.render(templatePath: string[, context: any])`
 
 Renders a template file.
 
 * **templatePath** *(string)*: Path to the template. Either absolute, or relative to the specified `rootPath`. Extension may be omitted if `.jsx` or `.tsx`.
 * **context** *(any)*: Any context will be passed as the first parameter of the template rendering function.
+
+`jsxPistols.expressEngine(filePath: string, options: object, callback: Function)`
+
+Express-compatible templating engine. Can be used as an alternative to the *expressApp* constructor option, for finer control on Express configuration.
 
 ### Template contract
 

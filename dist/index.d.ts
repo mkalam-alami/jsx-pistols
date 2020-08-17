@@ -22,7 +22,7 @@ export interface JsxPistolsOptions {
     babelOptions?: BabelOptions;
     /**
      * Whether template caching is disabled. If `true`, it will be loaded from the disk on every render.
-     * The library will also make an effort to prevent Node from caching imported templates.
+     * The library will also prevent Node from caching code that is only imported in templates.
      * Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
      */
     disableCache?: boolean;
@@ -38,6 +38,7 @@ export interface JsxPistolsOptions {
     prependDoctype?: boolean;
 }
 export default class JsxPistols {
+    expressEngine: (filePath: string, options: any, callback: Function) => void;
     private rootPath;
     private templateCache;
     private babelOptions?;
@@ -49,6 +50,7 @@ export default class JsxPistols {
      */
     constructor(options?: Partial<JsxPistolsOptions>);
     private registerToExpressApp;
+    private expressEngineInternal;
     /**
      * Renders a template file.
      * @param templatePath Path to the template, either absolute or relative to the specified `rootPath`. Extension may be omitted if using `.jsx` or `.tsx`.

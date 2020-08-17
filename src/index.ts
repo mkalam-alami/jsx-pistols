@@ -45,6 +45,8 @@ export interface JsxPistolsOptions {
 
 export default class JsxPistols {
 
+  public expressEngine: (filePath: string, options: any, callback: Function) => void;
+
   private rootPath: string;
   private templateCache: TemplateCache;
   private babelOptions?: Object;
@@ -56,6 +58,8 @@ export default class JsxPistols {
    * @param options Optional library configuration
    */
   constructor(options: Partial<JsxPistolsOptions> = {}) {
+    this.expressEngine = this.expressEngineInternal.bind(this);
+
     const isDevEnv = process.env.NODE_ENV !== 'production';
 
     this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
@@ -74,21 +78,20 @@ export default class JsxPistols {
   }
 
   private registerToExpressApp(app: any, viewsPath?: string) {
-    const expressEngine = async (filePath: string, options: any, callback: Function) => {
-      try {
-        const output = await this.render(filePath, options);
-        callback(null, output);
-      } catch (e) {
-        callback(e);
-      }
-    }
-
-    app.engine('js', expressEngine);
-    app.engine('jsx', expressEngine);
-    app.engine('tsx', expressEngine);
-    app.set('view engine', 'tsx');
+    app.engine('js', this.expressEngine);
+    app.engine('jsx', this.expressEngine);
+    app.engine('tsx', this.expressEngine);
     if (viewsPath) {
       app.set('views', this.toAbsolutePath(viewsPath));
+    }
+  }
+
+  private async expressEngineInternal(filePath: string, options: any, callback: Function) {
+    try {
+      const output = await this.render(filePath, options);
+      callback(null, output);
+    } catch (e) {
+      callback(e);
     }
   }
 

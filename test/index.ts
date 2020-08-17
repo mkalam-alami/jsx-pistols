@@ -44,10 +44,25 @@ test("[ JSX Pistols ]", async () => {
 
     assert(result === '<div>Hello</div><div>world!</div>');
   });
-  
+
   await test("Express template engine", async () => {
     const app = express();
+
     new JsxPistols({ rootPath: __dirname, expressApp: app });
+    
+    app.set('view engine', 'tsx');
+
+    /*
+
+    // Manual registration
+    
+    const jsxPistols = new JsxPistols({ rootPath: __dirname, expressApp: app });
+    
+    app.engine('tsx', jsxPistols.expressEngine);
+    app.set('view engine', 'tsx');
+    app.set('views', __dirname);
+
+    */
 
     app.get('/', (req, res) => {
       res.render('template-div', { name: 'world' })
