@@ -2,10 +2,11 @@
 
 TypeScript and JSX as web templates, for NodeJS.
 
-* Importing your app sources & typings from your templates
+* Freely import arbitrary sources & typings from your templates
 * Express support
 * Template caching
-* Hot reload support
+* Hot reload in development mode
+* Asynchronous rendering
 
 Under the hood, this is just a thin wrapper for [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string) and [Babel](https://babeljs.io/).
 
@@ -26,7 +27,7 @@ Under the hood, this is just a thin wrapper for [preact-render-to-string](https:
 npm install jsx-pistols
 ```
 
-## Usage
+## Example
 
 ### Template
 
@@ -39,11 +40,11 @@ export default function render(context: MyControllerContext) {
 }
 ```
 
-In production, you can either copy the files as-is, or compile them to JavaScript.
+In production you can either copy the files as-is, or compile them to JavaScript for performance.
 
 ### Rendering
 
-**Manually**
+**Using the API**
 
 ```typescript
 import JsxPistols from 'jsx-pistols';
@@ -54,14 +55,14 @@ const result = await jsxPistols.render('mytemplate', { name: 'John' });
 console.log(result); // <!doctype html><html><body>Hello John!</body></html>
 ```
 
-**In an Express app**
+**Using an Express app**
 
 ```typescript
 const app = express();
 
 new JsxPistols({ expressApp: app });
 
-app.set("view engine", "tsx"); // Can be switched to "js" in production
+app.set("view engine", "tsx"); // can be switched to "js" in production
 
 app.get('/', (req, res) => {
   res.render('mytemplate', { name: 'John' })
@@ -106,7 +107,7 @@ export default function render(context: any) {
 }
 ```
 
-Asynchronous functions are supported (promises will be resolved), although they are generally considered bad separation of controller and view.
+Note: while not necessarily a good practice, the render function can return a promise for asynchronous rendering.
 
 ### Default Babel options
 
