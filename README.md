@@ -20,6 +20,7 @@ Under the hood, this is just a thin wrapper for [preact-render-to-string](https:
   - [Template contract](#template-contract)
   - [Default Babel options](#default-babel-options)
 - [Tips and caveats](#tips-and-caveats)
+- [License](#license)
 
 ## Installation
 
@@ -172,3 +173,10 @@ declare module "preact" {
   }
 }
 ```
+
+
+## License
+
+MIT License
+
+Copyright (c) 2020 Marwane Kalam-Alami
