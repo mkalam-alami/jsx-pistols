@@ -59,11 +59,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 exports.defaultBabelOptions = void 0;
-var fs = __importStar(require("fs-extra"));
 var path = __importStar(require("path"));
 var preact_render_to_string_1 = __importDefault(require("preact-render-to-string"));
-var template_cache_1 = __importDefault(require("./template-cache"));
+var fs_1 = require("./fs");
 var require_cache_1 = __importDefault(require("./require-cache"));
+var template_cache_1 = __importDefault(require("./template-cache"));
 var transpiler_1 = require("./transpiler");
 exports.defaultBabelOptions = transpiler_1.defaultBabelOptions;
 var JsxPistols = /** @class */ (function () {
@@ -167,7 +167,7 @@ var JsxPistols = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         absolutePath = path.resolve(this.rootPath, templatePath);
-                        return [4 /*yield*/, fs.pathExists(absolutePath)];
+                        return [4 /*yield*/, fs_1.pathExists(absolutePath)];
                     case 1:
                         if (_b.sent()) {
                             return [2 /*return*/, absolutePath];
@@ -178,7 +178,7 @@ var JsxPistols = /** @class */ (function () {
                         if (!(_i < _a.length)) return [3 /*break*/, 5];
                         extension = _a[_i];
                         candidatePath = absolutePath + extension;
-                        return [4 /*yield*/, fs.pathExists(candidatePath)];
+                        return [4 /*yield*/, fs_1.pathExists(candidatePath)];
                     case 3:
                         if (_b.sent()) {
                             return [2 /*return*/, candidatePath];

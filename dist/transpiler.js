@@ -74,8 +74,8 @@ var babel = __importStar(require("@babel/core"));
 var babelPluginTransformModulesCommonJs = __importStar(require("@babel/plugin-transform-modules-commonjs"));
 var babelPluginTransformReactJsx = __importStar(require("@babel/plugin-transform-react-jsx"));
 var babelPresetTypescript = __importStar(require("@babel/preset-typescript"));
-var fs = __importStar(require("fs-extra"));
 var require_from_string_1 = __importDefault(require("require-from-string"));
+var fs_1 = require("./fs");
 exports.defaultBabelOptions = {
     presets: [[
             babelPresetTypescript,
@@ -94,7 +94,7 @@ function transpileTsx(absolutePath, babelOptions) {
         var tsxSources, jsSources, module;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fs.readFile(absolutePath)];
+                case 0: return [4 /*yield*/, fs_1.readFile(absolutePath)];
                 case 1:
                     tsxSources = _a.sent();
                     return [4 /*yield*/, babelTransform(tsxSources.toString(), absolutePath, babelOptions || exports.defaultBabelOptions)];

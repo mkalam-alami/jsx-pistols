@@ -1,9 +1,10 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
 import render from 'preact-render-to-string';
-import TemplateCache from './template-cache';
+import { pathExists } from './fs';
 import takeRequireCacheSnapshot from './require-cache';
+import TemplateCache from './template-cache';
 import { BabelOptions as TranspilerBabelOptions, defaultBabelOptions as defaultTranspilerBabelOptions, transpileTsx } from './transpiler';
+
 
 export const defaultBabelOptions = defaultTranspilerBabelOptions;
 
@@ -124,12 +125,12 @@ export default class JsxPistols {
   private async searchExistingPath(templatePath: string): Promise<string> {
     const absolutePath = path.resolve(this.rootPath, templatePath);
 
-    if (await fs.pathExists(absolutePath)) {
+    if (await pathExists(absolutePath)) {
       return absolutePath;
     }
     for (const extension of ['.js', '.jsx', '.tsx']) {
       const candidatePath = absolutePath + extension;
-      if (await fs.pathExists(candidatePath)) {
+      if (await pathExists(candidatePath)) {
         return candidatePath;
       }
     }

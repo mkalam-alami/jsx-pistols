@@ -2,9 +2,9 @@ import * as babel from "@babel/core";
 import * as babelPluginTransformModulesCommonJs from "@babel/plugin-transform-modules-commonjs";
 import * as babelPluginTransformReactJsx from "@babel/plugin-transform-react-jsx";
 import * as babelPresetTypescript from "@babel/preset-typescript";
-import * as fs from 'fs-extra';
 import { JSX } from "preact";
 import requireFromString from 'require-from-string';
+import { readFile } from "./fs";
 
 export const defaultBabelOptions = {
   presets: [[
@@ -25,7 +25,7 @@ export type BabelOptions = Object | 'skip';
 export type JSXTemplate = (context: Object) => JSX.Element;
 
 export async function transpileTsx(absolutePath: string, babelOptions?: BabelOptions): Promise<JSXTemplate> {
-  const tsxSources = await fs.readFile(absolutePath);
+  const tsxSources = await readFile(absolutePath);
   const jsSources = await babelTransform(tsxSources.toString(), absolutePath, babelOptions || defaultBabelOptions);
   const module = requireFromString(jsSources, absolutePath);
   if (typeof module.default !== 'function') {
