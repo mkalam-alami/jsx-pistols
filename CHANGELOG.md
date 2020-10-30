@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.5.1 (October 30, 2020)
+
+* Remove unnecessary files from build
+
+## 0.5.0 (October 30, 2020)
 
 * Use native require() in production
 * Drop caching capabilities in transpile mode, only advertise it for development
