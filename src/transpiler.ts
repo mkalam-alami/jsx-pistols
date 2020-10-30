@@ -20,7 +20,7 @@ export const defaultBabelOptions = {
   ]
 };
 
-export type BabelOptions = Object | 'skip';
+export type BabelOptions = Object;
 
 export type JSXTemplate = (context: Object) => JSX.Element;
 
@@ -35,9 +35,6 @@ export async function transpileTsx(absolutePath: string, babelOptions?: BabelOpt
 }
 
 async function babelTransform(tsxSources: string, absolutePath: string, babelOptions: BabelOptions = defaultBabelOptions) {
-  if (babelOptions === 'skip') {
-    return tsxSources;
-  }
   const transformResult = await babel.transformAsync(tsxSources, {
     ...babelOptions,
     filename: absolutePath

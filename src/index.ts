@@ -2,8 +2,7 @@ import * as path from 'path';
 import render from 'preact-render-to-string';
 import { pathExists } from './fs';
 import takeRequireCacheSnapshot from './require-cache';
-import TemplateCache from './template-cache';
-import { BabelOptions as TranspilerBabelOptions, defaultBabelOptions as defaultTranspilerBabelOptions, transpileTsx } from './transpiler';
+import { BabelOptions as TranspilerBabelOptions, defaultBabelOptions as defaultTranspilerBabelOptions, JSXTemplate, transpileTsx } from './transpiler';
 
 
 export const defaultBabelOptions = defaultTranspilerBabelOptions;
@@ -22,21 +21,15 @@ export interface JsxPistolsOptions {
   expressApp?: any;
   /**
    * Options object to pass to the Babel transpiler.
-   * Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). 
    * By default, the transpiler will support TypeScript and ECMAScript modules.
    */
   babelOptions?: BabelOptions;
   /**
-   * Whether template caching is disabled. If `true`, it will be loaded from the disk on every render.
-   * The library will also prevent Node from caching code that is only imported in templates.
-   * Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
+   * Whether to import the templates as native JS modules.  
+   * Defaults to `true` if `NODE_ENV` is set to 'production', `false` otherwise.  
+   * If production mode is disabled, the library will compile the template on every render, and also prevent Node from caching code that is only imported in templates.
    */
-  disableCache?: boolean;
-  /**
-   * The maximum number of templates to be kept in the cache. Unused if `disableCache` is set.
-   * Defaults to `0` (infinite).
-   */
-  maxCacheSize?: number;
+  productionMode?: boolean;
   /**
    * Whether to prepend "<!doctype html>" if the root element is an <html> tag.
    * Defaults to `true`.
@@ -49,10 +42,9 @@ export default class JsxPistols {
   public expressEngine: (filePath: string, options: any, callback: Function) => void;
 
   private rootPath: string;
-  private templateCache: TemplateCache;
   private babelOptions?: Object;
   private prependDoctype: boolean;
-  private disableCache: boolean;
+  private productionMode: boolean;
 
   /**
    * Creates a new JSX Pistols renderer.
@@ -66,12 +58,7 @@ export default class JsxPistols {
     this.rootPath = this.toAbsolutePath(options.rootPath || process.cwd(), process.cwd());
     this.babelOptions = options.babelOptions;
     this.prependDoctype = options.prependDoctype ?? true;
-    this.disableCache = options.disableCache ?? isDevEnv;
-
-    this.templateCache = new TemplateCache({
-      disable: this.disableCache,
-      maxCacheSize: options.maxCacheSize
-    });
+    this.productionMode = options.productionMode ?? !isDevEnv;
 
     if (options.expressApp) {
       this.registerToExpressApp(options.expressApp, options.rootPath);
@@ -79,9 +66,10 @@ export default class JsxPistols {
   }
 
   private registerToExpressApp(app: any, viewsPath?: string) {
-    app.engine('js', this.expressEngine);
-    app.engine('jsx', this.expressEngine);
-    app.engine('tsx', this.expressEngine);
+    const engines = this.productionMode ? ['js', 'jsx'] : ['js', 'jsx', 'tsx'];
+    for (const engine of engines) {
+      app.engine(engine, this.expressEngine);
+    }
     if (viewsPath) {
       app.set('views', this.toAbsolutePath(viewsPath));
     }
@@ -103,15 +91,16 @@ export default class JsxPistols {
    * @returns A promise resolving to the rendered string
    */
   public async render<T>(templatePath: string, context?: T): Promise<string> {
-    const jsxTemplate = await this.templateCache.wrap(templatePath, async () => {
+    let jsxTemplate: JSXTemplate;
+    if (this.productionMode) {
+      jsxTemplate = require(this.toAbsolutePath(templatePath)).default;
+    } else {
       const existingPath = await this.searchExistingPath(this.toAbsolutePath(templatePath));
-      const requireCacheSnapshot = this.disableCache
-        ? takeRequireCacheSnapshot({ rootPath: this.rootPath, ignore: ['**/node_modules/**'] })
-        : undefined;
-      const output = await transpileTsx(existingPath, this.babelOptions);
-      requireCacheSnapshot?.restore();
-      return output;
-    });
+      const requireCacheSnapshot = takeRequireCacheSnapshot({ rootPath: this.rootPath, ignore: ['**/node_modules/**'] });
+      jsxTemplate = await transpileTsx(existingPath, this.babelOptions);
+      requireCacheSnapshot.restore();
+    }
+
     const jsxOutput = jsxTemplate(context);
     const renderedHtml = render(jsxOutput);
     const prefix = (this.prependDoctype && jsxOutput.type === 'html') ? '<!doctype html>' : '';

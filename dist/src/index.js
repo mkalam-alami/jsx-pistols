@@ -84,7 +84,7 @@ var JsxPistols = /** @class */ (function () {
         }
     }
     JsxPistols.prototype.registerToExpressApp = function (app, viewsPath) {
-        var engines = this.productionMode ? ['js', 'jsx'] : ['js', 'jsx', 'tsx'];
+        var engines = this.productionMode ? ['js'] : ['js', 'jsx', 'tsx'];
         for (var _i = 0, engines_1 = engines; _i < engines_1.length; _i++) {
             var engine = engines_1[_i];
             app.engine(engine, this.expressEngine);

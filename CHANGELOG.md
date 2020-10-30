@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Use native require() in production
+* Drop caching capabilities in transpile mode, only advertise it for development
 * Expose express engine function
 * Drop fs-extra dependency
 * Upgrade all dependencies

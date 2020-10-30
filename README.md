@@ -1,14 +1,14 @@
 # JSX Pistols
 
-TypeScript and JSX as web templates, for NodeJS.
+JSX as web templates, tweaked for fast development. For TypeScript and NodeJS.
 
-* Freely import arbitrary sources & typings from your templates
-* Express support
-* Template caching
 * Hot reload in development mode
+* Native NodeJS require() in production mode
+* Freely import arbitrary sources & typings in your templates
+* Express support
 * Asynchronous rendering
 
-Under the hood, this is just a thin wrapper for [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string) and [Babel](https://babeljs.io/).
+Under the hood, this is just a thin wrapper for [preact-render-to-string](https://www.npmjs.com/package/preact-render-to-string), using [Babel](https://babeljs.io/) for live transpiling during development.
 
 ## Table of Contents
 
@@ -41,7 +41,7 @@ export default function render(context: MyControllerContext) {
 }
 ```
 
-In production you can either copy the files as-is, or compile them to JavaScript for performance.
+In production, it is recommended to let TypeScript compile the templates to JavaScript for performance.
 
 ### Rendering
 
@@ -78,10 +78,9 @@ app.get('/', (req, res) => {
 
 * **rootPath** *(string)*: The root path from which templates will be resolved. Defaults to the current working directory.
 * **expressApp** *(object)*: An Express application that will be configured for using JSX Pistols as an engine. Extensions .js, .jsx and .tsx will be registered.
-* **babelOptions** *(object | `skip`)*: Options object to pass to the Babel transpiler. Pass `skip` to skip the transpiler completely (useful if templates are compiled in production). By default, the transpiler will support TypeScript and ECMAScript modules (see below).
-* **disableCache** *(boolean)*: Whether template caching is disabled. If `true`, it will be loaded from the disk on every render. The library will also prevent Node from caching code that is only imported in templates. Defaults to `false` if NODE_ENV is set to 'production', `true` otherwise.
-* **maxCacheSize** *(number)*: The maximum number of templates to be kept in the cache. Unused if `disableCache` is set. Defaults to `0` (infinite).
+* **babelOptions** *(object)*: Options object to pass to the Babel transpiler. By default, the transpiler will support TypeScript and ECMAScript modules (see below).
 * **prependDoctype** *(boolean)*: Whether to prepend "\<!doctype html>" if the root element is an "\<html>" tag. Defaults to `true`.
+* **productionMode** *(boolean)*: Whether to import the templates as native JS modules. Defaults to `true` if `NODE_ENV` is set to 'production', `false` otherwise. If production mode is disabled, the library will compile the template on every render, and also prevent Node from caching code that is only imported in templates.
 
 ### Methods
   
@@ -112,7 +111,7 @@ Note: while not necessarily a good practice, the render function can return a pr
 
 ### Default Babel options
 
-By default, the transpiler will support TypeScript and JSX. If you have different features to support, you will need to override this object. The `@babel/plugin-transform-modules-commonjs` plugin is however mandatory, not keeping it will break all templates.
+By default, the transpiler will support TypeScript and JSX. If you want different features to support, in order to match more closely your TypeScript config, you will need to override this object. The `@babel/plugin-transform-modules-commonjs` plugin is however mandatory, not keeping it will break all templates.
 
 See also the [Babel options reference](https://babeljs.io/docs/en/options).
 
