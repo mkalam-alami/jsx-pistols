@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Expose express engine function
+* Upgrade all dependencies (except fs-extra)
 
 ## 0.4.0 (August 13, 2020)
 
