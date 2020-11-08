@@ -13,7 +13,7 @@ Under the hood, this is just a thin wrapper for [preact-render-to-string](https:
 ## Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
+- [Example](#Example)
 - [API reference](#api-reference)
   - [Constructor](#constructor)
   - [Methods](#methods)
