@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.0 (unreleased)
+## 0.6.0 (October 26, 2026)
 
 * Upgrade all dependencies to their latest major versions (Babel 8, Preact 11, preact-render-to-string 6, minimatch 10, TypeScript 7)
 * **Breaking:** Node.js `^22.18.0 || >=24.11.0` is now required (Babel 8 and Preact 11 are ESM-only and loaded through `require()`)
