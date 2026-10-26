@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 (unreleased)
+
+* Upgrade all dependencies to their latest major versions (Babel 8, Preact 11, preact-render-to-string 6, minimatch 10, TypeScript 7)
+* **Breaking:** Node.js `^22.18.0 || >=24.11.0` is now required (Babel 8 and Preact 11 are ESM-only and loaded through `require()`)
+* **Breaking:** Default Babel options now use `ignoreExtensions` for `@babel/preset-typescript` and the explicit `classic` runtime for `@babel/plugin-transform-react-jsx`; custom Babel options must follow the Babel 8 option format
+
 ## 0.5.1 (October 30, 2020)
 
 * Remove unnecessary files from build

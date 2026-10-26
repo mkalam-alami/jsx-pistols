@@ -1,9 +1,13 @@
 import { BabelOptions as TranspilerBabelOptions } from './transpiler';
 export declare const defaultBabelOptions: {
-    presets: any[][];
-    plugins: any[];
+    presets: (((api: import("@babel/core", { with: { "resolution-mode": "import" } }).PresetAPI, options: import("@babel/preset-typescript", { with: { "resolution-mode": "import" } }).Options, dirname: string) => import("@babel/core", { with: { "resolution-mode": "import" } }).PresetObject) | {
+        ignoreExtensions: boolean;
+    })[][];
+    plugins: ((((api: import("@babel/core", { with: { "resolution-mode": "import" } }).PluginAPI, options: import("@babel/plugin-transform-react-jsx", { with: { "resolution-mode": "import" } }).Options, dirname: string) => import("@babel/core", { with: { "resolution-mode": "import" } }).PluginObject<object & import("@babel/core", { with: { "resolution-mode": "import" } }).PluginPass<object>>) | {
+        runtime: string;
+    })[] | ((api: import("@babel/core", { with: { "resolution-mode": "import" } }).PluginAPI, options: import("@babel/plugin-transform-modules-commonjs", { with: { "resolution-mode": "import" } }).Options, dirname: string) => import("@babel/core", { with: { "resolution-mode": "import" } }).PluginObject<object & import("@babel/core", { with: { "resolution-mode": "import" } }).PluginPass<object>>))[];
 };
-export declare type BabelOptions = TranspilerBabelOptions;
+export type BabelOptions = TranspilerBabelOptions;
 export interface JsxPistolsOptions {
     /**
      * The root path from which templates will be resolved.

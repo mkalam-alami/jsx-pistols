@@ -1,4 +1,4 @@
-import { Minimatch, IMinimatch } from "minimatch";
+import { Minimatch } from "minimatch";
 import * as path from "path";
 
 export default function takeRequireCacheSnapshot(options: RequireCacheSnapshotOptions = {}) {
@@ -15,7 +15,7 @@ export class RequireCacheSnapshot {
 
   private initialSnapshot: string[] = [];
   private rootPath?: string;
-  private ignorePathsMatchers: IMinimatch[] = [];
+  private ignorePathsMatchers: Minimatch[] = [];
 
   constructor(options: RequireCacheSnapshotOptions) {
     this.initialSnapshot = Object.keys(require.cache);

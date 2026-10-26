@@ -1,7 +1,7 @@
 import * as babel from "@babel/core";
-import * as babelPluginTransformModulesCommonJs from "@babel/plugin-transform-modules-commonjs";
-import * as babelPluginTransformReactJsx from "@babel/plugin-transform-react-jsx";
-import * as babelPresetTypescript from "@babel/preset-typescript";
+import babelPluginTransformModulesCommonJs from "@babel/plugin-transform-modules-commonjs";
+import babelPluginTransformReactJsx from "@babel/plugin-transform-react-jsx";
+import babelPresetTypescript from "@babel/preset-typescript";
 import { JSX } from "preact";
 import requireFromString from 'require-from-string';
 import { readFile } from "./fs";
@@ -10,13 +10,12 @@ export const defaultBabelOptions = {
   presets: [[
     babelPresetTypescript,
     {
-      allExtensions: true,
-      isTSX: true
+      ignoreExtensions: true
     }
   ]],
   plugins: [
     babelPluginTransformModulesCommonJs,
-    babelPluginTransformReactJsx
+    [babelPluginTransformReactJsx, { runtime: "classic" }]
   ]
 };
 

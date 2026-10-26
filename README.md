@@ -28,6 +28,8 @@ Under the hood, this is just a thin wrapper for [preact-render-to-string](https:
 npm install jsx-pistols
 ```
 
+Requires Node.js `^22.18.0 || >=24.11.0`.
+
 ## Example
 
 ### Template
@@ -120,13 +122,12 @@ See also the [Babel options reference](https://babeljs.io/docs/en/options).
   "presets": [[
     "@babel/preset-typescript",
     {
-      "allExtensions": true,
-      "isTSX": true
+      "ignoreExtensions": true
     }
   ]],
   "plugins": [
     "@babel/plugin-transform-modules-commonjs",
-    "@babel/plugin-transform-react-jsx"
+    ["@babel/plugin-transform-react-jsx", { "runtime": "classic" }]
   ]
 }
 ```
